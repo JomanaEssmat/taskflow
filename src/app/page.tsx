@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { Download } from 'lucide-react'
 import Navbar from '@/components/portfolio/Navbar'
 import Hero from '@/components/portfolio/Hero'
 import About from '@/components/portfolio/About'
@@ -36,6 +37,16 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
+
+      {/* Download Project Button */}
+      <a
+        href="/api/download"
+        download
+        className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium shadow-lg glow-purple transition-all hover:scale-105"
+      >
+        <Download className="w-4 h-4" />
+        Download Project
+      </a>
     </div>
   )
 }
