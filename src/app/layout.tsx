@@ -15,9 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio | Creative Developer & 3D Artist",
-  description: "Showcasing creative web development, 3D art, and digital design projects with cutting-edge technologies.",
-  keywords: ["portfolio", "3D", "web development", "creative", "design", "Three.js", "React"],
+  title: "TaskFlow | Smart Task Management",
+  description: "A modern task management app with Kanban board, drag & drop, and real-time progress tracking.",
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
