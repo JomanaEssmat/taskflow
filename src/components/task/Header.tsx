@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, Plus, Menu, LayoutGrid, List, Sparkles } from 'lucide-react'
+import { Search, Plus, Menu, LayoutGrid, List, LayoutDashboard, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useTaskStore } from '@/store/taskStore'
@@ -12,8 +12,14 @@ export default function Header({ onAddTask }: { onAddTask: () => void }) {
   const totalCount = tasks.length
   const progress = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0
 
+  const views = [
+    { id: 'dashboard' as const, icon: LayoutDashboard, label: 'Dashboard' },
+    { id: 'board' as const, icon: LayoutGrid, label: 'Board' },
+    { id: 'list' as const, icon: List, label: 'List' },
+  ]
+
   return (
-    <header className="h-16 border-b border-border flex items-center gap-4 px-4 sm:px-6 bg-card/80 backdrop-blur-sm sticky top-0 z-30">
+    <header className="h-16 border-b border-border flex items-center gap-4 px-4 sm:px-6 bg-card/80 backdrop-blur-sm sticky top-0 z-30 shrink-0">
       {/* Menu button */}
       <Button
         variant="ghost"
@@ -48,22 +54,18 @@ export default function Header({ onAddTask }: { onAddTask: () => void }) {
 
       {/* View toggle */}
       <div className="hidden sm:flex items-center bg-secondary rounded-lg p-1">
-        <Button
-          variant={activeView === 'board' ? 'secondary' : 'ghost'}
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => setActiveView('board')}
-        >
-          <LayoutGrid className="w-4 h-4" />
-        </Button>
-        <Button
-          variant={activeView === 'list' ? 'secondary' : 'ghost'}
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => setActiveView('list')}
-        >
-          <List className="w-4 h-4" />
-        </Button>
+        {views.map(v => (
+          <Button
+            key={v.id}
+            variant={activeView === v.id ? 'secondary' : 'ghost'}
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => setActiveView(v.id)}
+            title={v.label}
+          >
+            <v.icon className="w-4 h-4" />
+          </Button>
+        ))}
       </div>
 
       {/* Add task */}

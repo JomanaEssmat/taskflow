@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  LayoutDashboard, Plus, Tag, X, Trash2,
+  LayoutDashboard, Plus, Trash2,
   LayoutGrid, List, ChevronLeft
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -23,10 +23,10 @@ export default function Sidebar() {
     fetchCategories, createCategory, deleteCategory,
   } = useTaskStore()
 
-  useEffect(() => { fetchCategories() }, [fetchCategories])
+  const [newCatName, setNewCatName] = useState('')
+  const [newCatColor, setNewCatColor] = useState(PRESET_COLORS[0])
 
-  const [newCatName, setNewCatName] = React.useState('')
-  const [newCatColor, setNewCatColor] = React.useState(PRESET_COLORS[0])
+  useEffect(() => { fetchCategories() }, [fetchCategories])
 
   const handleAddCategory = async () => {
     if (!newCatName.trim()) return
@@ -54,7 +54,7 @@ export default function Sidebar() {
           >
             {/* Header */}
             <div className="p-4 flex items-center justify-between">
-              <h2 className="font-semibold text-lg">Task Manager</h2>
+              <h2 className="font-semibold text-lg">TaskFlow</h2>
               <Button
                 variant="ghost"
                 size="icon"
@@ -73,6 +73,7 @@ export default function Sidebar() {
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">View</p>
                 <div className="space-y-1">
                   {[
+                    { id: 'dashboard' as const, icon: LayoutDashboard, label: 'Dashboard' },
                     { id: 'board' as const, icon: LayoutGrid, label: 'Board' },
                     { id: 'list' as const, icon: List, label: 'List' },
                   ].map(v => (
@@ -149,8 +150,8 @@ export default function Sidebar() {
                           filterCategory === cat.id ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
                         }`}
                       >
-                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
-                        <span className="flex-1">{cat.name}</span>
+                        <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+                        <span className="flex-1 truncate">{cat.name}</span>
                         <span className="text-xs opacity-50">{cat._count?.tasks || 0}</span>
                       </button>
                       <button
@@ -196,6 +197,3 @@ export default function Sidebar() {
     </AnimatePresence>
   )
 }
-
-// Need React import for useState in JSX
-import React from 'react'

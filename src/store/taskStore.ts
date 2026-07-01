@@ -33,14 +33,14 @@ interface TaskStore {
   searchQuery: string
   filterPriority: TaskPriority | null
   filterCategory: string | null
-  activeView: 'board' | 'list'
+  activeView: 'board' | 'list' | 'dashboard'
   sidebarOpen: boolean
 
   // Actions
   setSearchQuery: (q: string) => void
   setFilterPriority: (p: TaskPriority | null) => void
   setFilterCategory: (id: string | null) => void
-  setActiveView: (v: 'board' | 'list') => void
+  setActiveView: (v: 'board' | 'list' | 'dashboard') => void
   setSidebarOpen: (open: boolean) => void
   fetchTasks: () => Promise<void>
   fetchCategories: () => Promise<void>
@@ -68,7 +68,7 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   searchQuery: '',
   filterPriority: null,
   filterCategory: null,
-  activeView: 'board',
+  activeView: 'dashboard',
   sidebarOpen: false,
 
   setSearchQuery: (q) => set({ searchQuery: q }),
@@ -106,8 +106,9 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
         method: 'POST',
         body: JSON.stringify(data),
       })
-      const { fetchTasks } = get()
+      const { fetchTasks, fetchCategories } = get()
       fetchTasks()
+      fetchCategories()
       return task
     } catch {
       return null
@@ -131,8 +132,9 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   deleteTask: async (id) => {
     try {
       await apiFetch(`/api/tasks/${id}`, { method: 'DELETE' })
-      const { fetchTasks } = get()
+      const { fetchTasks, fetchCategories } = get()
       fetchTasks()
+      fetchCategories()
       return true
     } catch {
       return false
@@ -141,12 +143,13 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
 
   moveTask: async (taskId, newStatus) => {
     try {
-      await apiFetch('/api/tasks/reorder', {
-        method: 'PATCH',
-        body: JSON.stringify({ taskId, newStatus }),
+      await apiFetch(`/api/tasks/${taskId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ status: newStatus }),
       })
-      const { fetchTasks } = get()
+      const { fetchTasks, fetchCategories } = get()
       fetchTasks()
+      fetchCategories()
       return true
     } catch {
       return false
